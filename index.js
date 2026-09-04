@@ -1,5 +1,6 @@
 import express from "express"
 
+
 // data to receive.
 const data = {
     "arithmetic": {
@@ -213,10 +214,10 @@ const data = {
 }
 
 // init express app.
-const app = express()
-const PORT = process.env.PORT || 3000
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json())
+app.use(express.json());
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}...`)
 });
@@ -224,19 +225,30 @@ app.listen(PORT, () => {
 // retrieve question data from the API.
 app.get("/api", (req, res) => {
     const topic = req.query.topic;
-    const numQuestions = req.query.numberOfQs;
+    let numQuestions = req.query.numberOfQs;
+    console.log(topic)
+    console.log(numQuestions)
 
-    if (topic && numQuestions) {
-        let newData = {}
+    if (topic && (numQuestions != undefined)) {
+        console.log("topic defined");
+        console.log("numQuestions defined");
+        let newData = {};
+        numQuestions = parseInt(numQuestions)
+
         for (let i = 1; i < numQuestions+1; i++) {
+            console.log(`q${i}`)
             newData[`q${i}`] = data[topic][`q${i}`]
         }
-        res.send(newData[topic]);
-    } else if (topic && !numQuestions) {
+        res.send(newData);
+    } else if (topic && (numQuestions == undefined)) {
+        console.log("topic defined");
+        console.log("numQuestions undefined");
         // if no number of questions is specified, send all questions.
         res.send(data[topic]);
 
     } else {
+        console.log("topic undefined");
+        console.log("numQuestions undefined");
         res.send(data);
     }
 })
